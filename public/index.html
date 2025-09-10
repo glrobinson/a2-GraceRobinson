@@ -10,9 +10,45 @@
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   </head>
   <body>
-    <form>
-      <input type="text" id="yourname" value="your name here">
-      <button>submit</button>
-    </form>
+    <header>
+     <h1>🪣 Bucket List 🪣</h1>
+    </header>
+    <main class="grid">
+      <section id="enter">
+        <h2>Add a Goal to your Bucket List</h2>
+        <form>
+          <label>
+            Goal:
+            <input type="text" id="goal" required>
+          </label>
+          <label>
+            Estimated Cost:
+            <input type="number" id="cost" required>
+          </label>
+          <label>
+            Ideal Completion Year:
+            <input type="number" id="date" required>
+          </label>
+          <button type="submit">Add Goal</button>
+        </form>
+      </section>
+      <br>
+      <section id="results">
+        <h2 class="underline">All items on Your Bucket List</h2>
+        <table id="bucket">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Goal</th>
+              <th>Estimated Cost</th>
+              <th>Ideal Completion Year</th>
+              <th>How Many Years Until Goal Will be Completed By</th>
+              <th>What Should Be Saved Monthly for this Goal to be Completed by Completion Year</th>
+            </tr>
+          </thead>
+          <tbody id="bucket-list"></tbody>
+        </table>
+      </section>
+    </main>
   </body>
 </html>

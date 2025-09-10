@@ -9,10 +9,22 @@ const http = require( "http" ),
       port = 3000
 
 const appdata = [
-  { "model": "toyota", "year": 1999, "mpg": 23 },
-  { "model": "honda", "year": 2004, "mpg": 30 },
-  { "model": "ford", "year": 1987, "mpg": 14} 
+  { id: 1, goal: "Sky dive", cost: 5000, date: 2040, ...deriveFields({cost: 5000, date: 2040})},
+  { id: 2, goal: "Go to the moon", cost: 10000, date: 2050, ...deriveFields({cost: 10000, date: 2050})},
+  { id: 3, goal: "Meet Tucker Wetmore", cost: 150, date: 2030, ...deriveFields({cost: 150, date: 2030})} 
 ]
+let nextId = 4
+function deriveFields(base) {
+  const currentY = new Date().getFullYear()
+  const complete = Number(base.date) - currentY
+  let save = null
+  if (complete > 0) {
+    save = Math.ceil(Number(base.cost) / (complete * 12))
+  } else {
+    save = 0
+  }
+  return { complete, save }
+}
 
 const server = http.createServer( function( request,response ) {
   if( request.method === "GET" ) {
@@ -24,6 +36,11 @@ const server = http.createServer( function( request,response ) {
 
 const handleGet = function( request, response ) {
   const filename = dir + request.url.slice( 1 ) 
+
+  if(request.url === "/api/appdata") {
+    response.writeHead(200, {"Content-Type": "application/json"})
+    return response.end(JSON.stringify(appdata))
+  }
 
   if( request.url === "/" ) {
     sendFile( response, "public/index.html" )
@@ -40,12 +57,74 @@ const handlePost = function( request, response ) {
   })
 
   request.on( "end", function() {
-    console.log( JSON.parse( dataString ) )
+    let load
+    try {
+      load = JSON.parse(dataString || "{}")
+    } catch (e) {
+      response.writeHead(400, { "Content-Type": "application/json" })
+      response.end(JSON.stringify({ error: "Invalid JSON" }))
+      return
+    }
+    if (request.url === "/submit") {
+      const submitGoal = {
+        goal: String(load.goal ?? "").trim(),
+        cost: Number(load.cost),
+        date: Number(load.date)
+      }
+      const derived = deriveFields(submitGoal)
+      const row = { id: nextId++, ...submitGoal, ...derived }
+      appdata.push(row)
+
+      response.writeHead(200, { "Content-Type": "application/json" })
+      response.end(JSON.stringify({ ok: true, data: appdata }))
+      return
+    }
+
+    if (request.url === "/update") {
+      const idNumber = Number(load.id)
+      const findID = appdata.findIndex(r => r.id === idNumber)
+      if (findID === -1) {
+        response.writeHead(404, { "Content-Type": "application/json" })
+        response.end(JSON.stringify({ error: "Row not found" }))
+        return
+      }
+      const current = appdata[findID]
+      const goalUpdated = {
+        goal: load.goal !== undefined ? String(load.goal).trim(): current.goal,
+        cost:  load.cost  !== undefined ? Number(load.cost): current.cost,
+        date:   load.date   !== undefined ? Number(load.date): current.date
+      }
+      const derived = deriveFields(goalUpdated)
+      appdata[findID] = { ...current, ...goalUpdated, ...derived }
+
+      response.writeHead(200, { "Content-Type": "application/json" })
+      response.end(JSON.stringify({ ok: true, data: appdata, updated: appdata[findID] }))
+      return
+    }
+
+    if (request.url === "/delete") {
+      const { id } = load
+      if (typeof id !== "number") {
+        response.writeHead(400, { "Content-Type": "application/json" })
+        response.end(JSON.stringify({ error: "Required: id" }))
+        return
+      }
+      const findID = appdata.findIndex(r => r.id === id)
+      if (findID === -1) {
+        response.writeHead(404, { "Content-Type": "application/json" })
+        response.end(JSON.stringify({ error: "Row not found" }))
+        return
+      }
+      appdata.splice(findID, 1)
+      response.writeHead(200, { "Content-Type": "application/json" })
+      response.end(JSON.stringify({ ok: true, data: appdata }))
+      return
+    }
 
     // ... do something with the data here!!!
 
-    response.writeHead( 200, "OK", {"Content-Type": "text/plain" })
-    response.end("test")
+    response.writeHead( 200, "OK", {"Content-Type": "application/json" })
+    response.end(JSON.stringify({ ok: true, data: appdata }))
   })
 }
 

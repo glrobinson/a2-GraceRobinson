@@ -1,4 +1,113 @@
 body {
-  background:black;
-  color:white;
+  background: #dddddd;
+  color:black;
+  margin: 0;
+  font-family: 'Ubuntu', sans-serif;
+}
+.grid {
+  display: grid;
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+}
+header {
+  text-align: center;
+  align-content: center;
+  color: white;
+  height: 100px;
+  width: auto;
+  text-align: center;
+  font-weight: bold;
+  background-color: #666;
+  text-align: center;
+}
+h1 {
+  text-align: center;
+  color: white;
+}
+#enter {
+  background-color: aliceblue;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px black;
+  max-width: 1000px;
+  margin: auto;
+  padding: 10px;
+}
+#results {
+  text-align: center;
+}
+.underline {
+  text-decoration: underline;
+}
+label {
+  margin: 40px auto;
+  padding: 10px;
+}
+table {
+  width: 800px;
+  background-color: aliceblue;
+  margin: 40px auto;
+  border-collapse: collapse;
+  color: #000000;
+  border-radius: 12px 12px 20px 20px;
+  box-shadow: 0 4px 8px #000000;
+  overflow: hidden; 
+  border-bottom: 5px solid #666;
+}
+table thead {
+  color: #000000;
+}
+table thead th {
+  padding: 15px 15px;
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+table tbody td {
+  padding: 10px;
+  border-bottom: 1px solid #d4d4d4;
+  color: #000000;
+}
+table tbody tr:hover {
+  background-color: #d4d4d4;
+  cursor: pointer;
+}
+button {
+  background-color: #296198;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #8ac4ff;
+}
+.upd-btn {
+  background-color: #8ac4ff;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+}
+.upd-btn:hover {
+  background-color: #296198;
+}
+.del-btn {
+  background-color: #296198;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+}
+.del-btn:hover {
+  background-color: #8ac4ff;
 }
